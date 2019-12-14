@@ -1,0 +1,8 @@
+set maven path to system variables
+--------------------------------------
+system varibles - new - MAVEN -HOME=C:\Program Files\apache-maven-3.6.3
+find path and edit, enter the %MAVEN_HOME%\bin
+
+go to c drive and enter mvn --version
+
+go to project folder, open cmd, run app by using mvn spring-boot:run
