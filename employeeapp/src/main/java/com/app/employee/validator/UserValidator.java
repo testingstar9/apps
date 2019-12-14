@@ -1,5 +1,8 @@
 package com.app.employee.validator;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -13,6 +16,7 @@ import com.app.employee.service.UserService;
 public class UserValidator implements Validator {
     @Autowired
     private UserService userService;
+    
 
     @Override
     public boolean supports(Class<?> aClass) {
@@ -30,12 +34,18 @@ public class UserValidator implements Validator {
         if (userService.findByUsername(user.getUsername()) != null) {
             errors.rejectValue("username", "Duplicate.userForm.username");
         }
-
+//user.getPassword().contains("(?!^[0-9]*$)(?!^[a-zA-Z]*$)^([a-zA-Z0-9]{6,15})$")
+        		
+        // the match must be alphanumeric with at least one number, one letter, and be between 6-15 character in length.
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
-        if (user.getPassword().length() < 8 || user.getPassword().length() > 32) {
+        if (user.getPassword().length() < 8 || user.getPassword().length() > 15) {
             errors.rejectValue("password", "Size.userForm.password");
         }
 
+        if (!user.getPassword().matches("(?!^[0-9]*$)(?!^[a-zA-Z]*$)^([a-zA-Z0-9]{6,15})$")) {
+            errors.rejectValue("password", "Size.userForm.passwordPattern");
+        }
+        
         if (!user.getPasswordConfirm().equals(user.getPassword())) {
             errors.rejectValue("passwordConfirm", "Diff.userForm.passwordConfirm");
         }
